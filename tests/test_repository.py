@@ -20,3 +20,11 @@ def test_order_filtering():
     assert len([order for order in repo.list_orders('u2') if order[1] == 'u1']) == 0
     assert len([order for order in repo.list_orders('u1') if order[1] == 'u1']) == 2
     assert len([order for order in repo.list_orders('u2') if order[1] == 'u2']) == 2
+
+def test_get_product_sql_injection():
+    repo = StoreRepository(':memory:')
+    _ = repo.conn.executescript(SCHEMA)
+    _ = repo.conn.executemany('INSERT OR IGNORE INTO products VALUES (?, ?, ?, ?)', [
+        ('MOU-01', 'Wireless mouse', 29.95, 5),
+    ])
+    assert repo.get_product("' OR '1'='1") is None
