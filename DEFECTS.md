@@ -1,5 +1,8 @@
 This file contains the discovered defects in this application.
-1. `CheckoutService::checkout`: Stock is decremented before payment and without a shared transaction. This is commented on in the original code.
+
+1. `CheckoutService::checkout`: Stock is decremented before payment is checked. This is commented on in the original code.
+    - fix: Place the call to update stock inside a block that only runs if payment went through.
+
 2. `ShoppingCart::__init__`: `user_id` is allowed to be `None`. This is a problem in `checkout.py:35`, where `user_id` being `None` results in those orders being assigned to some user with id value `None`. I assume that this is a value not intended to be in the domain of `user_id`, since it may cause problems with subsequent SQL queries that assume a non-`None` user ID.
 3. `StoreRepository::list_orders`: The `SELECT` query is not being filtered by the given `user_id`, which means that any user can see all orders.
 4. `StoreRepository::get_saved_cart`: String concatenation of SQL query instead of using parameterized queries allows for SQL injection. Also present in `get_product`.

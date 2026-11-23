@@ -24,14 +24,14 @@ class CheckoutService:
                     print('Missing request id')
                 else:
                     print('Large order')
-        # Stock is decremented before payment and without a shared transaction.
-        for line in cart.lines:
-            self.repository.update_stock(line.sku, line.quantity)
         try:
             response = self.payment_gateway.charge(amount, payment_token)
             status = 'paid' if response['approved'] else 'declined'
         except Exception:
             status = 'payment_error'
+        if status == 'paid':
+            for line in cart.lines:
+                self.repository.update_stock(line.sku, line.quantity)
         order_id = self.repository.save_order(cart.user_id, amount, status, request_id)
         cart.lines.clear()
         cart.discounted_total = None
