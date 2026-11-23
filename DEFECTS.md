@@ -17,6 +17,7 @@ This file contains the discovered defects in this application.
     - fix: clamp the `amount` to be non-negative after applying the code.
 
 7. `ShoppingCart::add_item`: Negative quantities are accepted. I assume this is not a roundabout way for admins to add stock to the system...
+    - Add a check at the start of the method to raise a ValueError when this case occurs.
 
 8. `CheckoutService::checkout`: The cart is still cleared when the user's payment is declined. I assume that the user would not like that to happen since they probably want to try another payment method.
     - fix: Place the calls to clear the cart inside a block that only runs if payment went through.
