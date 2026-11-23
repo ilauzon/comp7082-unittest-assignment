@@ -7,8 +7,10 @@ This file contains the discovered defects in this application.
     - fix: add `isinstance` checks at the start of the constructor.
 
 3. `StoreRepository::list_orders`: The `SELECT` query is not being filtered by the given `user_id`, which means that any user can see all orders.
+    - fix: add `WHERE` clause in the offending query.
 
 4. `StoreRepository::get_saved_cart`: String concatenation of SQL query instead of using parameterized queries allows for SQL injection. Also present in `get_product`.
+    - fix: Replace string concatenation with parameterized queries in `get_product` and `get_saved_cart`.
 
 5. `ShoppingCart::add_item`: The quantity check does not check across the user's entire cart, only the current line being added.
     - fix: replace the check between `product.stock` and `quantity` with a check between `product.stock` and the accumulated number of items that would be in the user's cart after adding.
@@ -17,7 +19,15 @@ This file contains the discovered defects in this application.
     - fix: clamp the `amount` to be non-negative after applying the code.
 
 7. `ShoppingCart::add_item`: Negative quantities are accepted. I assume this is not a roundabout way for admins to add stock to the system...
-    - Add a check at the start of the method to raise a ValueError when this case occurs.
+    - fix: Add a check at the start of the method to raise a ValueError when this case occurs.
 
 8. `CheckoutService::checkout`: The cart is still cleared when the user's payment is declined. I assume that the user would not like that to happen since they probably want to try another payment method.
     - fix: Place the calls to clear the cart inside a block that only runs if payment went through.
+
+# Results of running tests
+
+![](tests.png)
+
+# Screenshot of successful GitHub Actions run
+
+![](actions.png)
