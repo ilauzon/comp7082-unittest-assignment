@@ -28,3 +28,12 @@ def test_get_product_sql_injection():
         ('MOU-01', 'Wireless mouse', 29.95, 5),
     ])
     assert repo.get_product("' OR '1'='1") is None
+
+def test_get_saved_cart_sql_injection():
+    repo = StoreRepository(':memory:')
+    _ = repo.conn.executescript(SCHEMA)
+    _ = repo.conn.executemany('INSERT INTO saved_cart VALUES (?, ?, ?)', [
+        ('u1', 'MOU-01', 1),
+        ('u2', 'MOU-01', 3),
+    ])
+    assert repo.get_saved_cart("' OR '1'='1") == []

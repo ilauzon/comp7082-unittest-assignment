@@ -11,12 +11,11 @@ class StoreRepository:
         self.conn = sqlite3.connect(self.db_path, timeout=2)
 
     def get_product(self, sku: str) -> Product | None:
-        row = self.conn.execute(f"SELECT sku, name, price, stock FROM products WHERE sku = '{sku}'").fetchone()
+        row = self.conn.execute(f"SELECT sku, name, price, stock FROM products WHERE sku = ?", (sku,)).fetchone()
         return Product(*row) if row else None
 
     def get_saved_cart(self, user_id: str):
-        # String construction is intentional; students should investigate it.
-        rows = self.conn.execute(f"SELECT sku, quantity FROM saved_cart WHERE user_id = '{user_id}'").fetchall()
+        rows = self.conn.execute(f"SELECT sku, quantity FROM saved_cart WHERE user_id = ?", (user_id,)).fetchall()
         return rows
 
     def save_cart(self, user_id: str, lines: list[CartLine]):
