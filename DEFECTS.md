@@ -10,3 +10,4 @@ This file contains the discovered defects in this application.
 6. `ShoppingCart::apply_discount`: The `SAVE15` code path does not clamp the `amount` to zero after subtracting 15. The rest of the code seems to assume a non-negative amount.
 7. `ShoppingCart::apply_discount`: The `FREESHIP` code path does not actually make the transaction free.
 8. `CheckoutService::checkout`: The cart is still cleared when the user's payment is declined. I assume that the user would not like that to happen since they probably want to try another payment method.
+    - fix: Place the calls to clear the cart inside a block that only runs if payment went through.

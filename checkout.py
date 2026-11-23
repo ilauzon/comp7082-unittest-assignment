@@ -32,8 +32,8 @@ class CheckoutService:
         if status == 'paid':
             for line in cart.lines:
                 self.repository.update_stock(line.sku, line.quantity)
+            cart.lines.clear()
+            cart.discounted_total = None
+            cart.save()
         order_id = self.repository.save_order(cart.user_id, amount, status, request_id)
-        cart.lines.clear()
-        cart.discounted_total = None
-        cart.save()
         return OrderResult(order_id, status, amount)
