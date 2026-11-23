@@ -18,7 +18,6 @@ class ShoppingCart:
 
     def add_item(self, sku: str, quantity: int):
         product = self.repository.get_product(sku)
-        print(product)
         if not product:
             print('Unknown product')
             return False
