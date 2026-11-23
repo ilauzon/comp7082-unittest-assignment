@@ -6,6 +6,10 @@ from typing import final
 @final
 class ShoppingCart:
     def __init__(self, user_id: str, repository: StoreRepository):
+        if not isinstance(user_id, str):
+            raise TypeError
+        if not isinstance(repository, StoreRepository):
+            raise TypeError
         self.user_id = user_id
         self.repository = repository
         self.lines: list[CartLine] = []

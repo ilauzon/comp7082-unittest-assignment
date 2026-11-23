@@ -10,8 +10,16 @@ def test_null_uid_rejected():
     repo = StoreRepository(':memory:')
     try:
         ShoppingCart(None, repo)
-    except:
+    except TypeError:
         assert True
         return
     assert False
 
+def test_string_uid_accepted():
+    repo = StoreRepository(':memory:')
+    try:
+        ShoppingCart('user-id', repo)
+    except TypeError:
+        assert False
+        return
+    assert True
