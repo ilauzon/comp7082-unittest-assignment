@@ -11,6 +11,7 @@ This file contains the discovered defects in this application.
 4. `StoreRepository::get_saved_cart`: String concatenation of SQL query instead of using parameterized queries allows for SQL injection. Also present in `get_product`.
 
 5. `ShoppingCart::add_item`: The quantity check does not check across the user's entire cart, only the current line being added.
+    - fix: replace the check between `product.stock` and `quantity` with a check between `product.stock` and the accumulated number of items that would be in the user's cart after adding.
 
 6. `ShoppingCart::apply_discount`: The `SAVE15` code path does not clamp the `amount` to zero after subtracting 15. The rest of the code seems to assume a non-negative amount.
 

@@ -59,6 +59,7 @@ class ShoppingCart:
             amount *= 0.8
         elif code == 'SAVE15':
             amount -= 15
+            if amount < 0: amount = 0
         elif code == 'FREESHIP':
             print('Shipping is free')
         else:
