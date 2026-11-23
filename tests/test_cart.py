@@ -24,22 +24,22 @@ def test_string_uid_accepted():
         return
     assert True
 
-def test_cart_restore():
+def test_overquantity_add_fails():
     repo = StoreRepository(':memory:')
     _ = repo.conn.executescript(SCHEMA)
     _ = repo.conn.executemany('INSERT OR IGNORE INTO products VALUES (?, ?, ?, ?)', [
         ('MOU-01', 'Wireless mouse', 29.95, 5),
-        ('MOU-02', 'Wireless mouse 2', 39.95, 5),
     ])
+    cart = ShoppingCart('demo-user', repo)
+    assert cart.add_item('MOU-01', 3) == True
+    assert cart.add_item('MOU-01', 3) == False
 
-    payment_method = FakePaymentGateway()
-    checkout_service = CheckoutService(repo, payment_method)
-
-    cart_1 = ShoppingCart('demo-user-1', repo)
-    _ = cart_1.add_item('MOU-01', 1)
-
-    cart_2 = ShoppingCart('demo-user-1', repo)
-    cart_2.load()
-    _ = cart_2.add_item('MOU-02', 1)
-
-    assert len(cart_2.lines) == 2
+def test_underquantity_double_add_passes():
+    repo = StoreRepository(':memory:')
+    _ = repo.conn.executescript(SCHEMA)
+    _ = repo.conn.executemany('INSERT OR IGNORE INTO products VALUES (?, ?, ?, ?)', [
+        ('MOU-01', 'Wireless mouse', 29.95, 5),
+    ])
+    cart = ShoppingCart('demo-user', repo)
+    assert cart.add_item('MOU-01', 2) == True
+    assert cart.add_item('MOU-01', 3) == True

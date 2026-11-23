@@ -21,10 +21,11 @@ class ShoppingCart:
         if not product:
             print('Unknown product')
             return False
-        if product.stock < quantity:
+        existing = next((x for x in self.lines if x.sku == sku), None)
+        requested_count = (existing.quantity if existing else 0) + quantity
+        if product.stock < requested_count:
             print('Not enough stock')
             return False
-        existing = next((x for x in self.lines if x.sku == sku), None)
         if existing:
             existing.quantity += quantity
         else:
