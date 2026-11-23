@@ -43,3 +43,14 @@ def test_underquantity_double_add_passes():
     cart = ShoppingCart('demo-user', repo)
     assert cart.add_item('MOU-01', 2) == True
     assert cart.add_item('MOU-01', 3) == True
+
+def test_discount_SAVE15():
+    repo = StoreRepository(':memory:')
+    _ = repo.conn.executescript(SCHEMA)
+    _ = repo.conn.executemany('INSERT OR IGNORE INTO products VALUES (?, ?, ?, ?)', [
+        ('MOU-01', 'Wireless mouse', 14, 5),
+    ])
+    cart = ShoppingCart('demo-user', repo)
+    _ = cart.add_item('MOU-01', 1)
+    assert cart.apply_discount('SAVE15') == True;
+    assert cart.discounted_total != None and cart.discounted_total >= 0;
