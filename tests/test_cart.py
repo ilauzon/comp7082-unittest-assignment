@@ -65,3 +65,17 @@ def test_discount_SAVE15_above_0():
     _ = cart.add_item('MOU-01', 1)
     assert cart.apply_discount('SAVE15') == True;
     assert cart.discounted_total != None and cart.discounted_total == 1;
+
+def test_add_with_negative_quantity():
+    repo = StoreRepository(':memory:')
+    _ = repo.conn.executescript(SCHEMA)
+    _ = repo.conn.executemany('INSERT OR IGNORE INTO products VALUES (?, ?, ?, ?)', [
+        ('MOU-01', 'Wireless mouse', 16, 5),
+    ])
+    cart = ShoppingCart('demo-user', repo)
+    try:
+        _ = cart.add_item('MOU-01', -3)
+    except ValueError:
+        assert True
+        return
+    assert False
