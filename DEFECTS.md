@@ -14,6 +14,7 @@ This file contains the discovered defects in this application.
     - fix: replace the check between `product.stock` and `quantity` with a check between `product.stock` and the accumulated number of items that would be in the user's cart after adding.
 
 6. `ShoppingCart::apply_discount`: The `SAVE15` code path does not clamp the `amount` to zero after subtracting 15. The rest of the code seems to assume a non-negative amount.
+    - fix: clamp the `amount` to be non-negative after applying the code.
 
 7. `ShoppingCart::add_item`: Negative quantities are accepted. I assume this is not a roundabout way for admins to add stock to the system...
 

@@ -17,6 +17,8 @@ class ShoppingCart:
         self.discounted_total = None
 
     def add_item(self, sku: str, quantity: int):
+        if quantity <= 0:
+            raise ValueError("Quantity cannot be non-positive.")
         product = self.repository.get_product(sku)
         if not product:
             print('Unknown product')

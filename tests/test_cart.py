@@ -79,3 +79,17 @@ def test_add_with_negative_quantity():
         assert True
         return
     assert False
+
+def test_add_with_zero_quantity():
+    repo = StoreRepository(':memory:')
+    _ = repo.conn.executescript(SCHEMA)
+    _ = repo.conn.executemany('INSERT OR IGNORE INTO products VALUES (?, ?, ?, ?)', [
+        ('MOU-01', 'Wireless mouse', 16, 5),
+    ])
+    cart = ShoppingCart('demo-user', repo)
+    try:
+        _ = cart.add_item('MOU-01', 0)
+    except ValueError:
+        assert True
+        return
+    assert False
