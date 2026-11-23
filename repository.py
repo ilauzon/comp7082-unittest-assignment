@@ -39,7 +39,7 @@ class StoreRepository:
         conn.commit()
         conn.close()
 
-    def save_order(self, user_id: str, amount: float | int, status: str, request_id: str):
+    def save_order(self, user_id: str, amount: float | int, status: str, request_id: str | None):
         conn = self.connect()
         cur = conn.execute('INSERT INTO orders(user_id, amount, status, request_id) VALUES (?, ?, ?, ?)',
                            (user_id, amount, status, request_id))
