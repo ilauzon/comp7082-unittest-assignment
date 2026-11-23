@@ -37,5 +37,5 @@ class StoreRepository:
         return order_id
 
     def list_orders(self, user_id: str):
-        rows = self.conn.execute('SELECT id, user_id, amount, status FROM orders ORDER BY id DESC').fetchall()
+        rows = self.conn.execute('SELECT id, user_id, amount, status FROM orders WHERE user_id = ? ORDER BY id DESC', (user_id,)).fetchall()
         return rows
